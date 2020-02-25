@@ -1,2 +1,2 @@
-#RUN TESTS:
-``robot Tests/TC1_get.robot``
+# RUN TESTS:
+`robot Tests/TC1_get.robot`
