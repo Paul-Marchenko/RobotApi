@@ -1,34 +1,31 @@
 *** Settings ***
-
+Library   XML
+Library    os
 Library    Collections
 Library    RequestsLibrary
 
 
 *** Variables ***
-${base_url}   http://jsonplaceholder.typicode.com
+${base_url}   http://thomas-bayer.com
 ${city}   Delhi
 
 *** Test Cases ***
 TC1
      create session    mysession   ${base_url}
-     ${response}= get request   mysession  /photos
+     ${response}= get request   mysession  /sqlrest?CUSTOMER/15
+     ${xml_string}= convert to string    ${response.content}
+     ${xml_obj}= parse xml    ${xml_string}
 
-     log to console    ${response.headers}
+     #Check
+     element text should be  ${xml_obj}  15  .//ID  #https://prnt.sc/r78w1q
 
-     ${Content_Type_value}= get from dictionary    ${response.headers}   Content-Type
-     should be equal    ${Content_Type_value}   application/json; charset=utf-8
+     #Check multiple
+     ${child_els}= get child elements  ${xml_obj}
+     should not be empty  ${child_els}
 
-     ${Content_Encode_value}= get from dictionary    ${response.headers}   Content-Encoding
-     should be equal    ${Content_Encode_value}   gzip
+     ${ID}= get element text   ${child_els[0]}
+     should be equal ${ID}    15
 
-TC_cookies
-     create session    mysession   ${base_url}
-     ${response}= get request   mysession  /photos
-
-     log to console    ${response.cookies}
-
-     ${cookieValue}= get from dictionary ${response.cookies}  _cfduid
-     log to console    ${cookieValue}
 
 
 #Reference Link: https://robotframework.org/robotframe...
