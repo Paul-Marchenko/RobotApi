@@ -15,11 +15,10 @@ BearerAuthTest
 
      ${headers}= create dictionaty    Authorization={token}  Content-Type=text/xml
 
-
-
+     ${request_body}= get file   C:/User/....
+     ${response}= post request    mysession   /    data=${request_body}   headers= ${headers}
+     log to console    ${response.status_code}
      log to console    ${response.content}
-     should be equal as strings    ${response.status_code}   200
-
 
 
 #Reference Link: https://robotframework.org/robotframe...
